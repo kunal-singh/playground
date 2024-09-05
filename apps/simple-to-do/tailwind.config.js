@@ -1,4 +1,4 @@
-import config from "@infiniti/tailwindss/tailwind.config";
+import config from "@playground/tailwindcss/tailwind.config";
 
 /** @type {import("tailwindcss").Config} */
 module.exports = {
