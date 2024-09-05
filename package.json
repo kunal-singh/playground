@@ -1,13 +1,21 @@
 {
-  "name": "@playground/source",
-  "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {},
+  "name": "playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "private": true,
-  "dependencies": {},
   "devDependencies": {
-    "@nx/js": "19.4.0",
-    "@nx/workspace": "19.4.0",
-    "nx": "19.4.0"
+    "@types/node": "^22.5.4",
+    "typescript": "^5.5.4",
+    "@playground/commitlint":"workspace:*",
+		"@playground/eslint": "workspace:*",
+		"@playground/prettier": "workspace:*",
+		"@playground/tsconfig": "workspace:*"
   }
 }
