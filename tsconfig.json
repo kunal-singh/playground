@@ -1,0 +1,4 @@
+{
+	"extends": "@playground/tsconfig/tsconfig.json",
+	"exclude": ["**/*.js"]
+}
