@@ -9,8 +9,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "private": true,
   "devDependencies": {
     "@types/node": "^22.5.4",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@playground/commitlint":"workspace:*",
+		"@playground/eslint": "workspace:*",
+		"@playground/prettier": "workspace:*",
+		"@playground/tsconfig": "workspace:*"
   }
 }
