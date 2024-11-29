@@ -94,6 +94,10 @@ async function createApp() {
     // Update package.json
     const packageJsonPath = path.join(appDir, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    
+    // Remove the type: "module" field
+    delete packageJson.type;
+    
     packageJson.devDependencies = {
       ...packageJson.devDependencies,
       "@playground/eslint": "workspace:*",
@@ -104,16 +108,95 @@ async function createApp() {
 
     // Create configuration files
     const configs = {
-      'eslint.config.js': `import eslintConfig from '@playground/eslint';\nexport default eslintConfig;`,
-      'postcss.config.js': `module.exports = require("@playground/tailwindcss/postcss.config");`,
-      'tailwind.config.js': `import config from "@playground/tailwindcss/tailwind.config";\n\n/** @type {import("tailwindcss").Config} */\nmodule.exports = {\n  ...config,\n  content: [\n    "./src/**/*.{ts,tsx}",\n  ],\n};`,
       'tsconfig.json': JSON.stringify({
+        files: [],
+        references: [
+          { path: "./tsconfig.app.json" },
+          { path: "./tsconfig.node.json" }
+        ]
+      }, null, 2),
+      
+      'tsconfig.app.json': JSON.stringify({
         extends: "@playground/tsconfig/tsconfig.json",
         compilerOptions: {
-          jsx: "react-jsx"
+          target: "ES2020",
+          useDefineForClassFields: true,
+          lib: ["ES2020", "DOM", "DOM.Iterable"],
+          module: "ESNext",
+          skipLibCheck: true,
+
+          /* Bundler mode */
+          moduleResolution: "bundler",
+          allowImportingTsExtensions: true,
+          isolatedModules: true,
+          moduleDetection: "force",
+          noEmit: true,
+          jsx: "react-jsx",
+
+          /* Linting */
+          strict: true,
+          noUnusedLocals: true,
+          noUnusedParameters: true,
+          noFallthroughCasesInSwitch: true
         },
         include: ["src"]
-      }, null, 2)
+      }, null, 2),
+
+      'tsconfig.node.json': JSON.stringify({
+        extends: "@playground/tsconfig/tsconfig.json",
+        compilerOptions: {
+          target: "ES2022",
+          lib: ["ES2023"],
+          module: "ESNext",
+          skipLibCheck: true,
+
+          /* Bundler mode */
+          moduleResolution: "bundler",
+          allowImportingTsExtensions: true,
+          isolatedModules: true,
+          moduleDetection: "force",
+          noEmit: true,
+
+          /* Linting */
+          strict: true,
+          noUnusedLocals: true,
+          noUnusedParameters: true,
+          noFallthroughCasesInSwitch: true
+        },
+        include: ["vite.config.ts"]
+      }, null, 2),
+
+      'eslint.config.js': `import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import eslintConfig from '@playground/eslint';
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended, ...eslintConfig],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  },
+)`,
+      'postcss.config.js': `module.exports = require("@playground/tailwindcss/postcss.config");`,
+      'tailwind.config.js': `import config from "@playground/tailwindcss/tailwind.config";\n\n/** @type {import("tailwindcss").Config} */\nmodule.exports = {\n  ...config,\n  content: [\n    "./src/**/*.{ts,tsx}",\n  ],\n};`,
     };
 
     for (const [filename, content] of Object.entries(configs)) {
