@@ -32,15 +32,6 @@ This project uses a monorepo structure with the following main directories:
   - `ui-kit/`: Shared UI components
   - `utils/`: Shared utility functions
 
-## Mini-Projects
-
-Below is a list of mini-projects included in this monorepo. Each project focuses on implementing specific technologies or concepts.
-
-<!-- TODO: Add links to your mini-projects as you create them -->
-- [Project 1](./packages/project1)
-- [Project 2](./packages/project2)
-- [Project 3](./packages/project3)
-
 ## Getting Started
 
 1. Clone the repository
@@ -50,6 +41,11 @@ Below is a list of mini-projects included in this monorepo. Each project focuses
    ```
 3. Run a specific project:
    ```
-   pnpm --filter=<project-name> dev
+   pnpm dev:app <project-name>
+3. Create a react project:
    ```
+   pnpm create:app <project-name>
+   ```
+   ```
+
 
