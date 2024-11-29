@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "create:app": "node scripts/create-app.js",
-    "dev:app": "node -e \"const app = process.argv[1]; require('child_process').spawn('pnpm', ['--filter=' + app, 'dev'], { stdio: 'inherit' });\""
+    "dev:app": "node scripts/dev-app.js"
   },
   "keywords": [],
   "author": "",

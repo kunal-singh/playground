@@ -46,6 +46,5 @@ This project uses a monorepo structure with the following main directories:
    ```
    pnpm create:app <project-name>
    ```
-   ```
 
 
