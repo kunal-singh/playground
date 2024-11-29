@@ -58,6 +58,37 @@ const writeFileWithBackup = (filePath, content) => {
   }
 };
 
+const createOrUpdateAppCss = (appDir) => {
+  const appCssPath = path.join(appDir, 'src', 'App.css');
+  const tailwindImport = '@import "@playground/tailwindcss/base.css";\n\n';
+  
+  try {
+    if (fs.existsSync(appCssPath)) {
+      // Read existing content
+      const content = fs.readFileSync(appCssPath, 'utf8');
+      if (!content.includes(tailwindImport)) {
+        // Add import at the top if it doesn't exist
+        writeFileWithBackup(appCssPath, tailwindImport + content);
+      }
+    } else {
+      // Create new App.css with the import
+      writeFileWithBackup(appCssPath, `${tailwindImport}#root {\n  max-width: 1280px;\n  margin: 0 auto;\n  padding: 2rem;\n  text-align: center;\n}\n`);
+    }
+
+    // Ensure App.css is imported in App.tsx
+    const appTsxPath = path.join(appDir, 'src', 'App.tsx');
+    if (fs.existsSync(appTsxPath)) {
+      let content = fs.readFileSync(appTsxPath, 'utf8');
+      if (!content.includes("import './App.css'")) {
+        content = `import './App.css'\n${content}`;
+        writeFileWithBackup(appTsxPath, content);
+      }
+    }
+  } catch (error) {
+    throw new Error(`Failed to setup CSS: ${error.message}`);
+  }
+};
+
 async function createApp() {
   let currentDir = process.cwd();
   let appDir = null;
@@ -202,6 +233,9 @@ export default tseslint.config(
     for (const [filename, content] of Object.entries(configs)) {
       writeFileWithBackup(path.join(appDir, filename), content);
     }
+
+    // After creating Vite app and before installing dependencies
+    createOrUpdateAppCss(appDir);
 
     // Install dependencies
     console.log('\x1b[32mInstalling dependencies...\x1b[0m');
